@@ -1,0 +1,33 @@
+#MSDS Spring 2018 
+##DATA 607 Data Aquisition and Management
+####Jiadi Li
+####Week 2 Assignment: SQL and R
+
+1. Load data from MySQL into an R dataframe
+```{r}
+#install.packages("RMySQL")
+library(RMySQL)
+
+SQLConnection <- dbConnect(MySQL(),user="root",password="",dbname="movies",host="localhost")
+movies <- dbGetQuery(SQLConnection,"SELECT * from movies;")
+head(movies)
+```
+
+2. Manipulate the dataset with SQL
+```{r}
+B_rating <- dbGetQuery(SQLConnection,"SELECT name, rate FROM movies WHERE judge = 'b';")
+B_rating
+```
+
+3. Manipulate the dataset with R
+```{r}
+A_rating <- subset(movies,judge == 'b',select = c(name,rate))
+A_rating
+```
+
+4. Update one record in the database
+```{r}
+dbSendQuery(SQLConnection,"UPDATE movies SET rate = 1 WHERE judge = 'a' AND name = 'The Post';")
+updated_movies <- dbGetQuery(SQLConnection,"SELECT * from movies;")
+updated_movies
+```
